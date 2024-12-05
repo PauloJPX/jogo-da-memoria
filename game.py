@@ -21,7 +21,8 @@ class MemoryGame:
         self.partidas_1 = 0
         self.partidas_2 = 0
         # Caminho para as imagens
-        self.image_folder = "E:/sistemas/memoria/cards"
+        #self.image_folder = "E:/sistemas/memoria/cards" caminho absoluto
+        self.image_folder = "cards/"
         self.card_images = []
         self.capa = None
 
