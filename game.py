@@ -1,11 +1,18 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-import os
+import os,sys
 import random
 import threading
 import time
 
 # novo 15:30
+
+def get_resource_path(relative_path):
+    """Obter o caminho do recurso embutido ou do sistema de arquivos."""
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relative_path)
+
+
 
 class MemoryGame:
     def __init__(self, root):
@@ -27,7 +34,10 @@ class MemoryGame:
         self.selected_positions = []
         self.partidas_1 = 0
         self.partidas_2 = 0
-        self.image_folder = "cards/"  # Caminho para as imagens
+
+        #image_path = get_resource_path("cards/")
+        self.image_folder = get_resource_path("cards/") # Caminho para as imagens
+
         self.card_images = []
         self.capa = None
 
@@ -39,6 +49,8 @@ class MemoryGame:
 
         # Inicializar labels
         self.atualizar_labels()
+
+
 
     def load_images(self):
         """Carrega as imagens dos cards."""
@@ -150,10 +162,16 @@ class MemoryGame:
 
 
     def on_button_click(self, position, button):
+        if button in self.selected_buttons:
+            # Se o botão já foi selecionado, não faz nada
+            return
         """Lida com cliques nos botões do tabuleiro."""
         if len(self.selected_buttons) < 2:
             for card, pos1, pos2 in self.cards_with_positions:
                 if position == pos1 or position == pos2:
+                    print('escolhido na mesma posicao')
+                    print(pos1,pos2)
+
                     button.config(image=card)
                     self.selected_buttons.append(button)
                     self.selected_positions.append(position)
@@ -170,7 +188,7 @@ class MemoryGame:
             img1 = next(card[0] for card in self.cards_with_positions if pos1 in card[1:])
             img2 = next(card[0] for card in self.cards_with_positions if pos2 in card[1:])
 
-            if img1 == img2:
+            if img1 == img2 and pos1 != pos2:
                 btn1.config(state=tk.DISABLED)
                 btn2.config(state=tk.DISABLED)
                 if self.jogador1:
